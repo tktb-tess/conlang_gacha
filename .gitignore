@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 archived
+proj-wasm/target
 
 # Editor directories and files
 .vscode/*
