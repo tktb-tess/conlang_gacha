@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
+import Gacha from "./components/Gacha";
 import "./style.css";
 
-const root = ReactDOM.createRoot(document.querySelector<HTMLDivElement>('div#root')!);
+const gacha = document.querySelector<HTMLDivElement>('div#gacha');
+if (!gacha) throw Error('cannot get `gacha`');
 
-root.render(
+ReactDOM.createRoot(gacha).render(
     <React.StrictMode>
-        <App />
+        <Gacha />
     </React.StrictMode>
 );
 
