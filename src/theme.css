@@ -7,7 +7,7 @@
     --color-trlc-white: #ffffff40;
     --color-mitternachtlila: oklch(29.17% 0.1174 296);
     --ease-rapid: cubic-bezier(0.0, 0.7, 0.3, 1.0);
-    --animate-slidein: slidein 1s var(--ease-rapid);
+    --animate-slidein: slidein .6s var(--ease-rapid);
     --animate-fadein: fadein .5s var(--default-transition-timing-function);
 
     @keyframes slidein {

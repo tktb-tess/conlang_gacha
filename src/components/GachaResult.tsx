@@ -2,6 +2,7 @@ import { contents } from "../modules/conlang_list";
 import { FC, useRef, useState } from "react";
 import { getRandomInt } from "../modules/util";
 import './GachaResult.css';
+import ExtLinkIcon from "./box-arrow-up-right";
 
 const GachaResult: FC = () => {
     const [index, setIndex] = useState(0);
@@ -87,10 +88,10 @@ const GachaResult: FC = () => {
                                                             return null;
 
                                                         } else {
-                                                            return <li key={sit.url}>{sit.name}: <a href={sit.url}>{sit.url}</a></li>;
+                                                            return <li key={sit.url}>{sit.name}: <a href={sit.url} target="_blank" rel="noreferrer">{sit.url} <ExtLinkIcon /></a></li>;
                                                         }
                                                     } else {
-                                                        return <li key={sit.url}><a href={sit.url}>{sit.url}</a></li>;
+                                                        return <li key={sit.url}><a href={sit.url} target="_blank" rel="noreferrer">{sit.url} <ExtLinkIcon /></a></li>;
                                                     }
                                                 })
                                             }
@@ -107,7 +108,7 @@ const GachaResult: FC = () => {
                                                 lang.dict.map((dic) => {
                                                     return (
                                                         <li key={dic}>
-                                                            <a href={dic}>{dic}</a>
+                                                            <a href={dic} target="_blank" rel="noreferrer">{dic} <ExtLinkIcon /></a>
                                                         </li>
                                                     );
                                                 })
@@ -125,7 +126,7 @@ const GachaResult: FC = () => {
                                                 lang.grammar.map((gram) => {
                                                     return (
                                                         <li key={gram}>
-                                                            <a href={gram}>{gram}</a>
+                                                            <a href={gram} target="_blank" rel="noreferrer">{gram} <ExtLinkIcon /></a>
                                                         </li>
                                                     );
                                                 })
@@ -143,7 +144,7 @@ const GachaResult: FC = () => {
                                                 lang.twitter.map((x) => {
                                                     return (
                                                         <li key={x}>
-                                                            <a href={x}>{x}</a>
+                                                            <a href={x} target="_blank" rel="noreferrer">{x} <ExtLinkIcon /></a>
                                                         </li>
                                                     );
                                                 })
