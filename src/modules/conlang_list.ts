@@ -1,7 +1,5 @@
-// @ts-check
-"use strict";
 
-type CotecMetadata = {
+export type CotecMetadata = {
     datasize: [number, number];
     title: string;
     author: string[];
@@ -10,10 +8,10 @@ type CotecMetadata = {
     license: { name: string, content: string };
     advanced: number;
     label: string[];
-    type: string[]
+    type: string[];
 };
 
-type CotecContent = {
+export type CotecContent = {
     messier: string;
     name: { normal: string[], kanji?: string[] };
     desc?: string[];
@@ -29,9 +27,13 @@ type CotecContent = {
     clav3?: { dialect: string, language: string, family: string, creator: string };
     part?: string;
     example?: string[];
-    script?: string[]
+    script?: string[];
 };
 
+export type Cotec = {
+    metadata: CotecMetadata;
+    contents: CotecContent[];
+}
 
 
 const ctcurl = "https://kaeru2193.github.io/Conlang-List-Works/conlinguistics-wiki-list.ctc";
@@ -85,7 +87,7 @@ const fetchConlangList = async () => {
     return parsed;
 };
 
-const parseToJSON = async () => {
+const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
 
     const contents: CotecContent[] = [];
 
@@ -364,17 +366,11 @@ const parseToJSON = async () => {
 
         contents.push(cotec_one_content);
     }
-    return { metadata, contents };
+    return [metadata, contents];
 }
 
 
-export const { metadata, contents } = await parseToJSON()
-    .then((result) => {
-        const metadata = result.metadata, contents = result.contents;
-
-        return { metadata, contents }
-
-    })
+export const [metadata, contents] = await parseToJSON()
     .catch((e) => {
         if (e instanceof Error) {
             throw e;
@@ -497,260 +493,16 @@ export const util = {
                 results.push({ index, name: lang.name.normal[0], content: lang });
             }
         });
+
         if (results.length === 0) {
             console.log('Not found!');
         }
-        return results;
-    },
 
-    getRandomInt(min: number, max: number) {
-        return Math.floor(Math.random() * (max - min) + min);
+        return results;
     },
 } as const;
 
 
 Object.freeze(contents);
 Object.freeze(metadata);
-
-console.log(`fetching & parsing cotec file was successful!`);
-
-
-/** ガチャ結果を表示 */
-export const showGachaResult = (index: number) => {
-    const gacha_result_E = document.querySelector<HTMLDivElement>('div#gacha-result');
-    if (!gacha_result_E) {
-        const e = Error('cannot get gacha_result_E');
-        console.error(e.stack);
-        return false;
-    }
-
-    const svg_external_link = `<svg xmlns="http://www.w3.org/2000/svg" class="bi bi-box-arrow-up-right" style="fill: currentColor; display: inline-block; width: .8rem; height: auto; vertical-align: middle;" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/></svg>`;
-    const lang = contents[index];
-
-    console.log({ index, name: lang.name.normal[0], content: lang });
-
-    if (gacha_result_E.dataset.visible) delete gacha_result_E.dataset.visible;
-
-    const prev_result = document.querySelector<HTMLUListElement>('ul#result-list');
-    if (prev_result) prev_result.remove();
-
-    // 結果リスト
-    const result_list_E = document.createElement('ul');
-    result_list_E.id = 'result-list';
-    result_list_E.classList.add('u-ms-7');
-
-
-
-    // 名前
-    const li_name = document.createElement('li');
-    li_name.id = 'json-name-normal';
-    li_name.textContent = `名前: ${lang.name.normal.join(', ')}`;
-    result_list_E.appendChild(li_name);
-
-    // 漢字略称
-    if (lang.name.kanji) {
-        const li_kanji = document.createElement('li');
-        li_kanji.id = 'json-name-kanji';
-        li_kanji.textContent = `漢字名: ${lang.name.kanji.join(', ')}`;
-        result_list_E.appendChild(li_kanji);
-    }
-
-    // 説明
-    if (lang.desc) {
-        const li_desc = document.createElement('li');
-        li_desc.id = 'json-desc';
-        li_desc.innerHTML = `<p>説明:</p>`;
-        if (lang.desc) {
-            const descs = lang.desc;
-            for (const desc of descs) {
-                const paragraph = document.createElement('p');
-                paragraph.textContent = desc;
-                li_desc.insertAdjacentElement('beforeend', paragraph);
-            }
-        }
-        result_list_E.appendChild(li_desc);
-    }
-
-    // 作者
-    const li_creator = document.createElement('li');
-    li_creator.id = 'json-creator';
-    li_creator.textContent = `作者: ${lang.creator.join(', ')}`;
-    result_list_E.appendChild(li_creator);
-
-    // 創作期間
-    if (lang.period) {
-        const li_period = document.createElement('li');
-        li_period.id = 'json-period';
-        li_period.textContent = `創作時期: ${lang.period}`;
-        result_list_E.appendChild(li_period);
-    }
-
-    // サイト
-    if (lang.site) {
-        const li_site = document.createElement('li');
-        li_site.id = 'json-site';
-        const sites = lang.site;
-        li_site.textContent = `サイト:`
-
-        const innerul_site = document.createElement('ul');
-        for (const site of sites) {
-
-            const regex = /^(?:文法|辞書)\d*$/u; // 「文法(n)」あるいは「辞書(n)」に一致
-            const regex2 = /(?:^サイト(?<number>\d*)$)|^$/u; // 「サイト(n)」に一致
-
-            if (!site.name) { // undefinedはURLのみ取り出す
-                const li = document.createElement('li');
-                li.innerHTML = `<a class="ext-link" href="${site.url}" target="_blank" rel="noreferrer">${site.url} ${svg_external_link}</a>`;
-                innerul_site.appendChild(li);
-            } else if (regex.exec(site.name)) continue; // regexに一致は無視
-            else if (regex2.exec(site.name)) { // regex2に一致もURLのみ取り出す
-                const li = document.createElement('li');
-                li.innerHTML = `<a class="ext-link" href="${site.url}" target="_blank" rel="noreferrer">${site.url} ${svg_external_link}</a>`;
-                innerul_site.appendChild(li);
-            } else { // それ以外はフルで入れる
-                const li = document.createElement('li');
-                li.innerHTML = `<a class="ext-link" href="${site.url}" target="_blank" rel="noreferrer">${site.name}: ${site.url} ${svg_external_link}</a>`;
-                innerul_site.appendChild(li);
-            }
-
-        }
-        li_site.insertAdjacentElement('beforeend', innerul_site);
-        result_list_E.appendChild(li_site);
-    }
-
-    // twitter
-    if (lang.twitter) {
-        const li_twitter = document.createElement('li');
-        li_twitter.id = 'json-twitter';
-        li_twitter.textContent = `𝕏 (旧twitter): `;
-        const innerul_twitter = document.createElement('ul');
-        const twitters = lang.twitter;
-        for (const twitter of twitters) {
-            const li = document.createElement('li');
-            const anchtxt = `<a class="ext-link" href="${twitter}" target="_blank" rel="noreferrer">${twitter} ${svg_external_link}</a>`;
-            li.innerHTML = anchtxt;
-            innerul_twitter.appendChild(li);
-        }
-        li_twitter.insertAdjacentElement('beforeend', innerul_twitter);
-        result_list_E.appendChild(li_twitter);
-    }
-
-    // 辞書
-    if (lang.dict) {
-        const li_dict = document.createElement('li');
-        li_dict.id = 'json-dict';
-        li_dict.textContent = `辞書: `;
-        const innerul_dict = document.createElement('ul');
-        const dicts = lang.dict;
-        for (const dict of dicts) {
-            const li = document.createElement('li');
-            const anchtxt = `<a class="ext-link" href="${dict}" target="_blank" rel="noreferrer">${dict} ${svg_external_link}</a>`;
-            li.innerHTML = anchtxt;
-            innerul_dict.appendChild(li);
-        }
-        li_dict.insertAdjacentElement('beforeend', innerul_dict);
-        result_list_E.appendChild(li_dict);
-    }
-
-    // 文法
-    if (lang.grammar) {
-        const li_grammar = document.createElement('li');
-        li_grammar.id = 'json-grammar';
-        li_grammar.textContent = `文法: `;
-        const innerul_grammar = document.createElement('ul');
-        const grammars = lang.grammar;
-        for (const grammar of grammars) {
-            const li = document.createElement('li');
-            const anchtxt = `<a class="ext-link" href="${grammar}" target="_blank" rel="noreferrer">${grammar} ${svg_external_link}</a>`;
-            li.innerHTML = anchtxt;
-            innerul_grammar.appendChild(li);
-        }
-        li_grammar.insertAdjacentElement('beforeend', innerul_grammar);
-        result_list_E.appendChild(li_grammar);
-    }
-
-    // 世界
-    if (lang.world) {
-        const li_world = document.createElement('li');
-        li_world.id = 'json-world';
-        li_world.textContent = `世界: ${lang.world.join(', ')}`;
-        result_list_E.appendChild(li_world);
-    }
-
-    // カテゴリ
-    if (lang.category) {
-        const li_category = document.createElement('li');
-        li_category.id = 'json-category';
-        const categories = lang.category;
-        li_category.textContent = `カテゴリ:`;
-        const innerul_cat = document.createElement('ul');
-        categories.forEach((category) => {
-            if (category.name === 'CLA v3' || category.name === 'モユネ分類') return;
-            const innerli_cat = document.createElement('li');
-            if (category.content) {
-                innerli_cat.textContent = `${category.name}: ${category.content}`;
-            } else {
-                innerli_cat.textContent = `${category.name}`;
-            }
-            innerul_cat.appendChild(innerli_cat);
-        });
-
-        li_category.insertAdjacentElement('beforeend', innerul_cat);
-        result_list_E.appendChild(li_category);
-    }
-
-    // モユネ分類
-    if (lang.moyune) {
-        const li_moyune = document.createElement('li');
-        li_moyune.id = 'json-moyune';
-        const moyunes = lang.moyune.join('/');
-        li_moyune.textContent = `モユネ分類: ${moyunes}`;
-        result_list_E.appendChild(li_moyune);
-    }
-
-    // CLA v3
-    if (lang.clav3) {
-        const li_clav3 = document.createElement('li');
-        li_clav3.id = 'json-clav3';
-        const clav3 = lang.clav3;
-
-        const codestr = `${clav3.dialect}_${clav3.language}_${clav3.family}_${clav3.creator}`;
-        li_clav3.textContent = `CLA v3: ${codestr}`;
-        result_list_E.dataset.claV3 = codestr;
-        const ietf = `art-x-v3-${clav3.creator}${(clav3.family === '~') ? '0' : clav3.family}${clav3.language}${(clav3.dialect === '~') ? '' : '-' + clav3.dialect}`;
-        li_name.lang = ietf;
-
-        result_list_E.appendChild(li_clav3);
-    }
-
-    // 例文
-    if (lang.example) {
-        const li_exp = document.createElement('li');
-        li_exp.id = 'json-example';
-        li_exp.textContent = `例文: ${lang.example.join(', ')}`;
-        if (lang.clav3) {
-            const ietf = `art-x-v3-${lang.clav3.creator}${(lang.clav3.family === '~') ? '0' : lang.clav3.family}${lang.clav3.language}${(lang.clav3.dialect === '~') ? '' : '-' + lang.clav3.dialect}`;
-            li_exp.lang = ietf;
-        }
-        result_list_E.appendChild(li_exp);
-    }
-
-    // 使用文字
-    if (lang.script) {
-        const li_script = document.createElement('li');
-        li_script.id = 'json-script';
-        li_script.textContent = `使用文字: ${lang.script.join(', ')}`;
-        result_list_E.appendChild(li_script);
-    }
-
-    gacha_result_E.appendChild(result_list_E);
-
-    if (li_creator.textContent.includes('斗琴庭暁響'))
-        gacha_result_E.classList.add('--mylang');
-    else gacha_result_E.classList.remove('--mylang');
-
-    setTimeout(() => {
-        gacha_result_E.dataset.visible = `${true}`;
-    }, 10);
-}
 

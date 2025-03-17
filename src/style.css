@@ -1,9 +1,5 @@
 @import 'tailwindcss';
-
-@theme {
-    --font-sans: 'Inter', 'Noto Sans JP', 'Source Han Sans JP', 'Yu Gothic', 'Segoe UI', sans-serif;
-    --font-serif: 'Charis SIL', 'Noto Serif JP', 'Source Han Serif JP', 'Yu Mincho', serif;
-}
+@import './theme.css';
 
 a {
     color: var(--color-cyan-400);

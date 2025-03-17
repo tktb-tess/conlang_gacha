@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+
+@theme {
+    --font-sans: 'Inter', 'Noto Sans JP', 'Source Han Sans JP', 'Yu Gothic', 'Segoe UI', sans-serif;
+    --font-serif: 'Charis SIL', 'Noto Serif JP', 'Source Han Serif JP', 'Yu Mincho', serif;
+    --color-mnlila: oklch(17.62% 0.0962 296);
+    --color-trlc-white: #ffffff40;
+    --color-mitternachtlila: oklch(29.17% 0.1174 296);
+    --ease-rapid: cubic-bezier(0.0, 0.7, 0.3, 1.0);
+    --animate-slidein: slidein 1s var(--ease-rapid);
+    --animate-fadein: fadein .5s var(--default-transition-timing-function);
+
+    @keyframes slidein {
+        from {
+            top: 40px;
+        }
+        to {
+            top: 0px;
+        }
+    }
+    
+    @keyframes fadein {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+}
+

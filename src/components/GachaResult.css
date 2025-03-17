@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+@import '../theme.css';
+
+#result-table {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 5px;
+    max-width: 100%;
+
+    * {
+        min-width: 0;
+    }
+    
+
+    tr, tbody {
+        display: contents;
+    }
+
+    td {
+        --color-bg: #ffffff10;
+        display: block;
+        border: solid 1px var(--color-bg);
+        background-color: var(--color-bg);
+        padding: calc(var(--spacing) * 0.2) calc(var(--spacing) * 2);
+        overflow-wrap: break-word;
+        border-radius: 2px;
+        &:first-child {
+            text-wrap: nowrap;
+        }
+    }
+
+    li {
+        list-style-type: '\25b8  ';
+        margin-left: calc(var(--spacing) * 4);
+    }
+    
+}
+
+#result-root {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 10ms ease;
+
+    &[data-visible="true"] {
+        visibility: visible;
+        opacity: 1;
+        animation: var(--animate-fadein), var(--animate-slidein);
+    }
+    
+}
+
+
