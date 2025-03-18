@@ -5,11 +5,11 @@
     a {
         color: var(--color-cyan-400);
         transition: color 100ms var(--default-transition-timing-function);
-        
-        @media (hover: hover) and (pointer: fine) {
-            a:hover {
-                color: var(--color-cyan-700);
-            }
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        a:hover {
+            color: var(--color-cyan-700);
         }
     }
 
