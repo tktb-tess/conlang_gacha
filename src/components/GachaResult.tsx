@@ -20,7 +20,7 @@ const GachaResult: FC = () => {
                 type="button"
                 className="
                     px-3 py-2
-                    font-serif font-semibold
+                    font-serif font-bold
                     text-lg text-center text-mnlila
                     transition-colors bg-white hover:bg-neutral-300 bg-gradient-to-b from-transparent to-[#00000050]
                     drop-shadow-md rounded-lg

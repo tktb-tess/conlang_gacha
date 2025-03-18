@@ -28,11 +28,6 @@
             text-wrap: nowrap;
         }
     }
-
-    li {
-        list-style-type: '\25b8  ';
-        margin-left: calc(var(--spacing) * 4);
-    }
     
 }
 

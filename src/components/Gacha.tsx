@@ -11,7 +11,7 @@ const Gacha: FC = () => {
             <p>最終更新: <code>{last_updated.toLocaleString('ja-JP')}</code></p>
             <h3 className="text-center font-medium font-serif text-2xl">合計 {metadata.datasize[0]} 語</h3>
             <GachaResult />
-            <p className="text-right mt-auto mb-2">Cotecライセンス表示: {metadata.license.content}</p>
+            <p className="text-right mt-auto">Cotecライセンス表示: {metadata.license.content}</p>
         </>
     );
 }

@@ -13,12 +13,13 @@ const react_r = ReactDOM.createRoot(root);
 
 react_r.render(
     <StrictMode>
-        <header>
-            <h1 className="font-serif text-5xl font-bold text-center my-10">人工言語ガチャ</h1>
+        <header className="mx-[-1.25rem]">
+            <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center my-10">人工言語ガチャ</h1>
         </header>
-        <main className="flex flex-col justify-center min-h-[90vh] gap-y-3">
+        <main className="flex flex-col justify-center min-h-[90vh] gap-y-3 mb-2">
+            
             <section>
-                <h2 className="text-3xl font-semibold text-center font-serif mb-5">〜説明〜</h2>
+                <h2 className="text-2xl font-semibold text-center font-serif mb-5">〜説明〜</h2>
                 <p>
                     <a href="https://github.com/kaeru2193/Conlang-List-Works/" target="_blank" rel="noreferrer">
                         かえるさん (kaeru2193) のリポジトリ <ExtLinkIcon />
@@ -42,6 +43,9 @@ react_r.render(
             </section>
             <Gacha />
         </main>
+        <footer className="flex justify-center my-8">
+            <a className="rounded-sm bg-slate-800 hover:bg-slate-700 transition-colors text-white px-6 py-2" href="../">戻る</a>
+        </footer>
     </StrictMode>
 );
 
