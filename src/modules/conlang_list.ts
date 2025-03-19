@@ -1,18 +1,18 @@
 
-export type CotecMetadata = {
-    datasize: [number, number];
+export type CotecMetadata = Readonly<{
+    datasize: readonly [number, number];
     title: string;
-    author: string[];
+    author: readonly string[];
     date_created: string;
     date_last_updated: string;
-    license: { name: string, content: string };
+    license: Readonly<{ name: string, content: string }>;
     advanced: number;
-    label: string[];
-    type: string[];
-};
+    label: readonly string[];
+    type: readonly string[];
+}>;
 
 export type CotecContent = {
-    messier: string;
+    messier: unknown;
     name: { normal: string[], kanji?: string[] };
     desc?: string[];
     creator: string[];
@@ -30,10 +30,10 @@ export type CotecContent = {
     script?: string[];
 };
 
-export type Cotec = {
+export type Cotec = Readonly<{
     metadata: CotecMetadata;
     contents: CotecContent[];
-}
+}>;
 
 
 const ctcurl = "https://kaeru2193.github.io/Conlang-List-Works/conlinguistics-wiki-list.ctc";
@@ -91,22 +91,21 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
 
     const contents: CotecContent[] = [];
 
-    const parsed = await fetchConlangList();
-    const parsed_data = parsed;
+    const parsed_data = await fetchConlangList();
     const row_meta = parsed_data[0];
 
 
     // メタデータ
     const datasize = ((): [number, number] => {
-        const datasize_ = row_meta[0].split('x').map((size) => Number.parseInt(size));
-        return [datasize_[0], datasize_[1]];
+        const datasize = row_meta[0].split('x').map((size) => Number.parseInt(size));
+        return [datasize[0], datasize[1]];
     })();
 
     const title = row_meta[1];
     const author = row_meta[2].split(',').map((str) => str.trim());
     const date_created = row_meta[3];
     const date_last_updated = row_meta[4];
-    const license = { name: row_meta[5], content: row_meta[6] };
+    const license = { name: row_meta[5], content: row_meta[6] } as const;
     const advanced = Number.parseInt(row_meta[7]);
 
     if (advanced !== 0) {
@@ -126,7 +125,7 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
         advanced,
         label,
         type
-    } as const;
+    };
 
     // console.log(metadata.type.join(', '));
 
@@ -161,7 +160,7 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
             for (const desc of descs) {
                 desc_.push(desc);
                 const matchurls = desc.match(regexurl);
-                //console.log(matchurls);
+                
                 if (matchurls) {
                     const urlarray = Array.from(matchurls);
 
@@ -196,9 +195,10 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
 
                     if (!url) throw Error('parse error: site.url is empty');
 
-                    const s_ = (name)
+                    const s_ = name
                         ? { name, url }
-                        : { url };
+                        : { url }
+                    ;
 
                     site_.push(s_);
                 }
@@ -229,17 +229,13 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
                     if (elem.name.includes('辞書')) dict_.push(elem.url);
                 }
             });
+
             if (grammar_.length > 0) cotec_one_content.grammar = grammar_;
             if (dict_.length > 0) cotec_one_content.dict = dict_;
         }
 
-
-        // console.log(cotec_one_content.dict);
-        // console.log(cotec_one_content.grammar);
-
         // twitter
         if (row[7]) cotec_one_content.twitter = row[7].split(';').map((s) => s.trim());
-
 
         // dict
         if (row[8]) {
@@ -272,16 +268,20 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
             const category_p = row[11].split(';').map((s) => s.trim());
 
             const regex = /^(?<name>[^:]+)(?::(?<content>.+))?$/u;
-            const category_ = [];
+            const category_: NonNullable<typeof cotec_one_content.category> = [];
+
             for (const elem of category_p) {
                 const match = regex.exec(elem);
 
                 if (match && match.groups) {
                     const res = match.groups;
                     const name = res.name, content = res.content;
+
                     const c_ = content
                         ? { name, content }
-                        : { name };
+                        : { name }
+                    ;
+
                     category_.push(c_);
                 }
             }
@@ -342,6 +342,7 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
         if (row[13]) {
             const clav3_regex = /^(?<dialect>~|[a-z]{2})_(?<language>[a-z]{2})_(?<family>~|[a-z]{3})_(?<creator>[a-z]{3})$/;
             const match = clav3_regex.exec(row[13]);
+
             if (match && match.groups) {
                 const res = match.groups;
                 const clav3 = {
@@ -350,11 +351,10 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
                     family: res.family,
                     creator: res.creator,
                 };
+
                 cotec_one_content.clav3 = clav3;
             }
         }
-
-        // console.log(cotec_one_content.clav3);
 
         // part
         if (row[14]) cotec_one_content.part = row[14].trim();

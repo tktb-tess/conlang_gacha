@@ -13,7 +13,7 @@ export default defineConfig({
     ],
     server: {
         open: '/.',
-        port: 7777,
+        port: 8000,
     },
     preview: {
         port: 4000,

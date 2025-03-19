@@ -2,7 +2,7 @@
 
 @theme {
     --font-sans: 'Inter', 'Arial', 'Noto Sans JP', 'Source Han Sans JP', 'BIZ UDPGothic', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Segoe UI', sans-serif;
-    --font-serif: 'Charis SIL', 'Times', 'Helvetica Neue', 'Noto Serif JP', 'Source Han Serif JP', 'BIZ UDPMincho', 'Yu Mincho', 'Hiragino Serif', serif;
+    --font-serif: 'Charis SIL', 'Times', 'Helvetica Neue', 'Noto Serif JP', 'Source Han Serif JP', 'BIZ UDPMincho', 'Yu Mincho', 'Hiragino Mincho', 'Hiragino Serif', serif;
     --color-mnlila: oklch(17.62% 0.0962 296);
     --color-trlc-white: #ffffff40;
     --color-mitternachtlila: oklch(29.17% 0.1174 296);
