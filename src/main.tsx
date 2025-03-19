@@ -14,7 +14,7 @@ const react_r = ReactDOM.createRoot(root);
 react_r.render(
     <StrictMode>
         <header className="mx-[-1.25rem]">
-            <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center my-10">人工言語ガチャ</h1>
+            <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center my-10">{import.meta.env.VITE_APP_NAME}</h1>
         </header>
         <main className="flex flex-col justify-center min-h-[90vh] gap-y-3 mb-2">
             
