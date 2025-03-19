@@ -1,10 +1,10 @@
-# copied from Vite Site https://ja.vite.dev/guide/static-deploy.html#github-pages
+# copied from Vite's official site https://ja.vite.dev/guide/static-deploy.html#github-pages
 
 # 静的コンテンツを GitHub Pages にデプロイするためのシンプルなワークフロー
-name: Deploy static content to Pages
+name: Deploy Conlang-Gacha to Pages
 
 on:
-  # デフォルトブランチを対象としたプッシュ時にで実行されます
+  # デフォルトブランチを対象としたプッシュ時に実行されます
   push:
     branches: ['main']
 
