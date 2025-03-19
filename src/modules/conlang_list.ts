@@ -1,5 +1,5 @@
 
-export type CotecMetadata = Readonly<{
+type CotecMetadata = Readonly<{
     datasize: readonly [number, number];
     title: string;
     author: readonly string[];
@@ -11,7 +11,7 @@ export type CotecMetadata = Readonly<{
     type: readonly string[];
 }>;
 
-export type CotecContent = {
+type CotecContent = {
     messier: unknown;
     name: { normal: string[], kanji?: string[] };
     desc?: string[];
@@ -29,12 +29,6 @@ export type CotecContent = {
     example?: string[];
     script?: string[];
 };
-
-export type Cotec = Readonly<{
-    metadata: CotecMetadata;
-    contents: CotecContent[];
-}>;
-
 
 const ctcurl = "https://kaeru2193.github.io/Conlang-List-Works/conlinguistics-wiki-list.ctc";
 
@@ -126,8 +120,6 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
         label,
         type
     };
-
-    // console.log(metadata.type.join(', '));
 
     // messier,name,kanji,desc,creator,period,site,twitter,dict,grammar,world,category,moyune,cla,part,example,script
     for (let i = 3; i < parsed_data.length - 1; i++) {
@@ -366,6 +358,8 @@ const parseToJSON = async (): Promise<[CotecMetadata, CotecContent[]]> => {
 
         contents.push(cotec_one_content);
     }
+
+    console.log('fetching cotec file is successful');
     return [metadata, contents];
 }
 
@@ -502,7 +496,13 @@ export const util = {
     },
 } as const;
 
+Object.defineProperty(window, 'cotec_json', {
+    value: {
+        metadata,
+        contents,
+        util,
+    },
+    enumerable: true,
+});
 
-Object.freeze(contents);
-Object.freeze(metadata);
 

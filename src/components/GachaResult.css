@@ -4,8 +4,10 @@
 #result-table {
     display: grid;
     grid-template-columns: repeat(2, auto);
-    gap: 5px;
+    row-gap: 1rem;
+    column-gap: 1.5rem;
     max-width: 100%;
+    align-content: start;
 
     * {
         min-width: 0;
@@ -17,27 +19,29 @@
     }
 
     td {
-        --color-bg: #ffffff10;
+        --color-bg: #ffffff20;
         display: block;
         border: solid 1px var(--color-bg);
         background-color: var(--color-bg);
-        padding: calc(var(--spacing) * 0.2) calc(var(--spacing) * 2);
+        padding: calc(var(--spacing) * 1) calc(var(--spacing) * 3);
         overflow-wrap: break-word;
-        border-radius: 2px;
+        border-radius: 4px;
+        
         &:first-child {
             text-wrap: nowrap;
+            border-radius: 35px;
+            align-self: center;
+            justify-self: end;
+            text-align: center;
         }
     }
     
 }
 
 #result-root {
-    visibility: hidden;
     opacity: 0;
-    transition: visibility 10ms ease;
-
+    
     &[data-visible="true"] {
-        visibility: visible;
         opacity: 1;
         animation: var(--animate-fadein), var(--animate-slidein);
     }
