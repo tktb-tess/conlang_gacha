@@ -7,8 +7,6 @@ import ExtLinkIcon from "./components/box-arrow-up-right";
 const root = document.querySelector<HTMLDivElement>('div#root');
 if (!root) throw Error('cannot get `root`');
 
-
-
 const react_r = ReactDOM.createRoot(root);
 
 react_r.render(

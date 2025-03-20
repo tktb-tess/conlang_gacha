@@ -1,4 +1,4 @@
-import { contents } from "../modules/conlang_list";
+import { contents } from "../modules/fetching";
 import { FC, useRef, useState } from "react";
 import { getRandomInt } from "../modules/util";
 import './GachaResult.css';
@@ -14,6 +14,26 @@ const GachaResult: FC = () => {
 
     const lang = contents[index];
 
+    const handleClick = () => {
+        const next_id = getRandomInt(0, contents.length);
+        
+        setIndex(() => next_id);
+        if (!isVisible) setVisible(() => true);
+
+        const next_lang = contents[next_id];
+        console.log({id: next_id, name: next_lang.name.normal[0], lang: next_lang});
+
+        if (result_ref.current) {
+            delete result_ref.current.dataset.visible;
+
+            setTimeout(() => {
+                if (result_ref.current) {
+                    result_ref.current.dataset.visible = 'true';
+                }
+            }, 10);
+        }
+    };
+
     return (
         <div className="flex flex-col items-center gap-y-4">
             <button
@@ -27,25 +47,7 @@ const GachaResult: FC = () => {
                     drop-shadow-md rounded-lg
                     cursor-pointer
                 "
-                onClick={() => {
-                    const next_id = getRandomInt(0, contents.length);
-                    setIndex(() => next_id);
-                    if (!isVisible) setVisible(() => true);
-
-                    const next_lang = contents[next_id];
-                    console.log({id: next_id, name: next_lang.name.normal[0], lang: next_lang});
-
-                    if (result_ref.current) {
-                        delete result_ref.current.dataset.visible;
-
-                        setTimeout(() => {
-                            if (result_ref.current) {
-                                result_ref.current.dataset.visible = 'true';
-                            }
-                        }, 10);
-                    }
-
-                }}>
+                onClick={handleClick}>
                 ガチャを回す！
             </button>
 
@@ -187,6 +189,12 @@ const GachaResult: FC = () => {
                                             }
                                         </ul>
                                     </td>
+                                </tr>
+                            )}
+                            {lang.moyune && (
+                                <tr>
+                                    <td>モユネ分類</td>
+                                    <td>{lang.moyune.join('/')}</td>
                                 </tr>
                             )}
                             {lang.clav3 && (
