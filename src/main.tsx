@@ -9,6 +9,7 @@ if (!root) throw Error('cannot get `root`');
 
 const react_r = ReactDOM.createRoot(root);
 
+
 react_r.render(
     <StrictMode>
         <header className="mx-[-1.25rem]">

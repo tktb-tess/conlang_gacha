@@ -1,24 +1,22 @@
 import { contents } from "../modules/fetching";
-import { FC, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { getRandomInt } from "../modules/util";
 import './GachaResult.css';
 import ExtLinkIcon from "./box-arrow-up-right";
 
 const GachaResult: FC = () => {
-    const [index, setIndex] = useState(0);
+    const init = localStorage.getItem('langID');
 
-    // 最初だけ表示しない
-    const [isVisible, setVisible] = useState(false);
+    const [index, setIndex] = useState(Number(init));
     
     const result_ref = useRef<HTMLDivElement | null>(null);
 
     const lang = contents[index];
 
-    const handleClick = () => {
+    const handleShow = () => {
         const next_id = getRandomInt(0, contents.length);
         
         setIndex(() => next_id);
-        if (!isVisible) setVisible(() => true);
 
         const next_lang = contents[next_id];
         console.log({id: next_id, name: next_lang.name.normal[0], lang: next_lang});
@@ -34,6 +32,18 @@ const GachaResult: FC = () => {
         }
     };
 
+    const handleBeforeUnload = useCallback(() => {
+        localStorage.setItem('langID', index.toString());
+    }, [index]);
+
+    useEffect(() => {
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [handleBeforeUnload]);
+
     return (
         <div className="flex flex-col items-center gap-y-4">
             <button
@@ -47,11 +57,11 @@ const GachaResult: FC = () => {
                     drop-shadow-md rounded-lg
                     cursor-pointer
                 "
-                onClick={handleClick}>
+                onClick={handleShow}>
                 ガチャを回す！
             </button>
 
-            {isVisible && (
+            {(
                 <div ref={result_ref} className="flex flex-col gap-y-3 relative" id="result-root" data-visible="true">
                     <h3 id="kekka" className="text-2xl font-medium font-serif text-center">〜結果〜</h3>
 
