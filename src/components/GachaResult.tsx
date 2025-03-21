@@ -1,11 +1,11 @@
 import { contents } from "../modules/fetching";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { getRandomInt } from "../modules/util";
 import './GachaResult.css';
 import ExtLinkIcon from "./box-arrow-up-right";
 
 const GachaResult: FC = () => {
-    const init = localStorage.getItem('langID');
+    const init = localStorage.getItem('last_shown_langID');
 
     const [index, setIndex] = useState(Number(init));
     
@@ -32,17 +32,13 @@ const GachaResult: FC = () => {
         }
     };
 
-    const handleBeforeUnload = useCallback(() => {
-        localStorage.setItem('langID', index.toString());
-    }, [index]);
-
     useEffect(() => {
-        window.addEventListener('beforeunload', handleBeforeUnload);
+        localStorage.setItem('last_shown_langID', index.toString());
 
         return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
+            localStorage.removeItem('last_shown_langID');
         };
-    }, [handleBeforeUnload]);
+    }, [index]);
 
     return (
         <div className="flex flex-col items-center gap-y-4">
