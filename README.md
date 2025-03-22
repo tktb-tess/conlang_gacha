@@ -1,4 +1,6 @@
-# 人工言語ガチャ v1.1.2
+# 人工言語ガチャ
+
+`v1.2.0`
 
 ## 説明
 
@@ -8,4 +10,9 @@
 
 Cotec形式については [こちら](https://migdal.jp/cl_kiita/cotec-conlang-table-expression-powered-by-csv-clakis-rfc-2h86)を読んでください。
 
+## 更新履歴
 
+- v1.2.0
+  - デザインの修正
+  - テーブルのレスポンシブ対応
+  - 最後に引いた言語を記憶して再読み込み時に表示するように
