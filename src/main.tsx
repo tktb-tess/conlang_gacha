@@ -11,9 +11,9 @@ if (!root) throw Error('cannot get `root`');
 ReactDOM.createRoot(root).render(
     <StrictMode>
         <header className="mx-(--n-gutter) flow-root">
-            <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center my-10">{import.meta.env.VITE_APP_NAME}</h1>
+            <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center my-15">{import.meta.env.VITE_APP_NAME}</h1>
         </header>
-        <main className="flex flex-col justify-center min-h-[90vh] gap-y-3 mb-2">
+        <main className="flex flex-col justify-start min-h-[90vh] gap-y-3 mb-2">
             
             <section>
                 <h2 className="text-2xl font-semibold text-center font-serif mb-5">〜説明〜</h2>
