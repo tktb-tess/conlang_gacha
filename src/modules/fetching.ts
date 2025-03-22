@@ -1,8 +1,8 @@
 const moyunes = ['INT', 'ART', 'EXP', 'PHI', 'HYP', 'NAT', 'REA', 'IMG', 'CIN', 'CDE', 'GEN', 'SPE', 'SON', 'LIT', 'KIN', 'SER', 'JOK', 'PAV', 'AAV', 'PWL', 'AWL', 'TOL', 'PRI', 'PUB', 'FIX'] as const;
 
-type Moyune = (typeof moyunes)[number];
+type MoyuneClass = (typeof moyunes)[number];
 
-const isMoyune = (str: string): str is Moyune => {
+const isMoyune = (str: string): str is MoyuneClass => {
 
     for (const moyune of moyunes) {
         if (moyune === str) return true;
@@ -10,12 +10,12 @@ const isMoyune = (str: string): str is Moyune => {
     return false;
 };
 
-type CotecMetadata = Readonly<{
+export type CotecMetadata = Readonly<{
     datasize: readonly [number, number];
     title: string;
     author: readonly string[];
-    date_created: Date;
-    date_last_updated: Date;
+    date_created: Readonly<Date>;
+    date_last_updated: Readonly<Date>;
     license: Readonly<{ name: string, content: string }>;
     advanced: number;
     label: readonly string[];
@@ -37,7 +37,7 @@ type CotecContent = {
     grammar?: string[];
     world?: string[];
     category?: { name: string, content?: string }[];
-    moyune?: Moyune[];
+    moyune?: MoyuneClass[];
     clav3?: {
         dialect: string;
         language: string;
@@ -331,7 +331,7 @@ const parseToJSON = async (): Promise<[CotecMetadata, readonly Readonly<CotecCon
                     case "モユネ分類": {
 
                         if (elem.content) {
-                            const m: Moyune[] = [];
+                            const m: MoyuneClass[] = [];
                             const parsed = Array.from(elem.content.match(/[A-Z]{3}/g) ?? []);
                             parsed.forEach(s => {
                                 if (isMoyune(s)) m.push(s);
@@ -349,7 +349,7 @@ const parseToJSON = async (): Promise<[CotecMetadata, readonly Readonly<CotecCon
 
         // moyune
         if (row[12]) {
-            const m: Moyune[] = [];
+            const m: MoyuneClass[] = [];
             const parsed = Array.from(row[12].match(/[A-Z]{3}/g) ?? []);
 
             parsed.forEach(s => {

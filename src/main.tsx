@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import Gacha from "./components/Gacha";
+import { metadata } from "./modules/fetching";
 import "./style.css";
 import ExtLinkIcon from "./components/box-arrow-up-right";
 
@@ -9,7 +10,7 @@ if (!root) throw Error('cannot get `root`');
 
 ReactDOM.createRoot(root).render(
     <StrictMode>
-        <header className="mx-[-1.25rem]">
+        <header className="mx-(--n-gutter) flow-root">
             <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center my-10">{import.meta.env.VITE_APP_NAME}</h1>
         </header>
         <main className="flex flex-col justify-center min-h-[90vh] gap-y-3 mb-2">
@@ -37,10 +38,11 @@ ReactDOM.createRoot(root).render(
                     )
                 </p>
             </section>
-            <Gacha />
+            <Gacha metadata={metadata} />
         </main>
-        <footer className="flex justify-center my-8">
+        <footer className="flex flex-col items-center gap-y-5 justify-center mb-3">
             <a className="rounded-sm bg-slate-800 hover:bg-slate-700 transition-colors text-white px-6 py-2" href="../">戻る</a>
+            <p className="self-end">Cotecライセンス表示: {metadata.license.content}</p>
         </footer>
     </StrictMode>
 );

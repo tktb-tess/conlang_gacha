@@ -9,6 +9,8 @@
     --ease-rapid: cubic-bezier(0.0, 0.7, 0.3, 1.0);
     --animate-slidein: slidein .6s var(--ease-rapid);
     --animate-fadein: fadein .5s var(--default-transition-timing-function);
+    --gutter: 1.25rem;
+    --n-gutter: calc(var(--gutter) * -1);
 
     @keyframes slidein {
         from {
