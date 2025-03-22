@@ -14,10 +14,10 @@
     }
 
     code {
-        background-color: var(--color-slate-200);
-        padding-inline: 3px;
+        padding-inline: calc(var(--spacing) * 1);
         border-radius: 2px;
-        color: var(--color-black);
+        border: solid 1px #ffffff20;
+        background-color: black;
     }
 }
 

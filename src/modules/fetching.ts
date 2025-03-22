@@ -14,8 +14,8 @@ type CotecMetadata = Readonly<{
     datasize: readonly [number, number];
     title: string;
     author: readonly string[];
-    date_created: string;
-    date_last_updated: string;
+    date_created: Date;
+    date_last_updated: Date;
     license: Readonly<{ name: string, content: string }>;
     advanced: number;
     label: readonly string[];
@@ -117,8 +117,8 @@ const parseToJSON = async (): Promise<[CotecMetadata, readonly Readonly<CotecCon
 
     const title = row_meta[1];
     const author = row_meta[2].split(',').map((str) => str.trim());
-    const date_created = row_meta[3];
-    const date_last_updated = row_meta[4];
+    const date_created = new Date(row_meta[3]);
+    const date_last_updated = new Date(row_meta[4]);
     const license = { name: row_meta[5], content: row_meta[6] } as const;
     const advanced = Number.parseInt(row_meta[7]);
 

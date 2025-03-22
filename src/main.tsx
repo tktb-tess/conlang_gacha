@@ -7,10 +7,7 @@ import ExtLinkIcon from "./components/box-arrow-up-right";
 const root = document.querySelector<HTMLDivElement>('div#root');
 if (!root) throw Error('cannot get `root`');
 
-const react_r = ReactDOM.createRoot(root);
-
-
-react_r.render(
+ReactDOM.createRoot(root).render(
     <StrictMode>
         <header className="mx-[-1.25rem]">
             <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center my-10">{import.meta.env.VITE_APP_NAME}</h1>
@@ -23,10 +20,10 @@ react_r.render(
                     <a href="https://github.com/kaeru2193/Conlang-List-Works/" target="_blank" rel="noreferrer">
                         かえるさん (kaeru2193) のリポジトリ <ExtLinkIcon />
                     </a>
-                    にて管理されている <code>“conlinguistics-wiki-list.ctc”</code> からデータを取得し、ランダムで1つ言語を選んで情報を表示します。
+                    にて管理されている <code>conlinguistics-wiki-list.ctc</code> からデータを取得し、ランダムで1つ言語を選んで情報を表示します。
                 </p>
                 <p>
-                    <code>“conlinguistics-wiki-list.ctc”</code> とは、人工言語学Wikiの
+                    <code>conlinguistics-wiki-list.ctc</code> とは、人工言語学Wikiの
                     <a href="https://wiki.conlinguistics.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E%E5%9C%8F%E3%81%AE%E4%BA%BA%E5%B7%A5%E8%A8%80%E8%AA%9E%E4%B8%80%E8%A6%A7"
                         target="_blank" rel="noreferrer">
                         日本語圏の人工言語一覧 <ExtLinkIcon />
