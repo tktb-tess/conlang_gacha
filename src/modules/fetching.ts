@@ -404,6 +404,11 @@ export const [metadata, contents] = await parseToJSON()
     })
 ;
 
+type result_t = {
+    index: number;
+    name: string;
+    content: CotecContent;
+};
 
 export const util = {
 
@@ -478,11 +483,6 @@ export const util = {
 
 
     searchByName(name: string) {
-        type result_t = {
-            index: number;
-            name: string;
-            content: CotecContent;
-        };
 
         const results: result_t[] = [];
 
@@ -504,11 +504,7 @@ export const util = {
     },
 
     searchByCreator(name: string) {
-        type result_t = {
-            index: number;
-            name: string;
-            content: CotecContent;
-        };
+        
 
         const results: result_t[] = [];
         contents.forEach((lang, index) => {
