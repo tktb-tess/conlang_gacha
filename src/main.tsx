@@ -41,7 +41,6 @@ ReactDOM.createRoot(root).render(
             <Gacha metadata={metadata} />
         </main>
         <footer className="flex flex-col items-center gap-y-5 justify-center mb-3">
-            <a className="rounded-sm bg-slate-800 hover:bg-slate-700 transition-colors text-white px-6 py-2" href="../">戻る</a>
             <p className="self-end">Cotecライセンス表示: {metadata.license.content}</p>
         </footer>
     </StrictMode>
