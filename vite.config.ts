@@ -5,7 +5,7 @@ import topLevelAwait from 'vite-plugin-top-level-await';
 
 // https://vite.dev/config/
 export default defineConfig({
-    base: '/conlang_gacha/',
+    base: '/',
     plugins: [
         react(),
         tailwindcss(),
@@ -13,9 +13,5 @@ export default defineConfig({
     ],
     server: {
         open: '/.',
-        port: 8000,
     },
-    preview: {
-        port: 4000,
-    }
-})
+});

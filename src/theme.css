@@ -1,9 +1,10 @@
 @import 'tailwindcss';
 
 @theme {
-    --font-sans: 'Inter', 'Arial', 'Noto Sans JP', 'Source Han Sans JP', 'BIZ UDPGothic', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Segoe UI', sans-serif;
-    --font-serif: 'Charis SIL', 'Times', 'Helvetica Neue', 'Noto Serif JP', 'Source Han Serif JP', 'BIZ UDPMincho', 'Yu Mincho', 'Hiragino Mincho', 'Hiragino Serif', serif;
-    --color-mnlila: oklch(17.62% 0.0962 296);
+    --font-sans: 'Inter', 'Arial', 'Helvetica Neue', sans-serif;
+    --font-serif: 'Charis SIL', 'Times New Roman', serif;
+    --color-mnlila: oklch(29.21% .1595 296);
+    --color-mnlila2: oklch(11.18% .0609 296);
     --color-trlc-white: #ffffff40;
     --color-mitternachtlila: oklch(29.17% 0.1174 296);
     --ease-rapid: cubic-bezier(0.0, 0.7, 0.3, 1.0);
