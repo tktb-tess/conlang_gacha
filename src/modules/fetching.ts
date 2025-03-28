@@ -147,7 +147,7 @@ const parseToJSON = async (): Promise<[CotecMetadata, readonly Readonly<CotecCon
         const row = parsed_data[i];
 
         const cotec_one_content: CotecContent = {
-            messier: undefined,
+            messier: null,
             name: {
                 normal: [],
             },
@@ -203,14 +203,13 @@ const parseToJSON = async (): Promise<[CotecMetadata, readonly Readonly<CotecCon
                 if (match.groups) {
 
                     const res = match.groups;
-                    const name = res.name, url = res.url;
+                    const { name, url } = res;
 
                     if (!url) throw Error('parse error: site.url is empty');
 
                     const s_ = name
                         ? { name, url }
-                        : { url }
-                        ;
+                        : { url };
 
                     site_.push(s_);
                 }
@@ -286,13 +285,11 @@ const parseToJSON = async (): Promise<[CotecMetadata, readonly Readonly<CotecCon
                 const match = regex.exec(elem);
 
                 if (match && match.groups) {
-                    const res = match.groups;
-                    const name = res.name, content = res.content;
+                    const { name, content } = match.groups;
 
                     const c_ = content
                         ? { name, content }
-                        : { name }
-                        ;
+                        : { name };
 
                     category_.push(c_);
                 }
@@ -307,24 +304,22 @@ const parseToJSON = async (): Promise<[CotecMetadata, readonly Readonly<CotecCon
 
                 switch (elem.name) {
                     case "CLA v3": {
-                        if (!elem.content) throw Error('');
-                        const clav3_regex = /^(?<dialect>~|[a-z]{2})_(?<language>[a-z]{2})_(?<family>~|[a-z]{3})_(?<creator>[a-z]{3})$/;
-                        const match = clav3_regex.exec(elem.content);
-
-                        if (match && match.groups) {
-                            const res = match.groups;
-                            const dia = res.dialect;
-                            const lang = res.language;
-                            const fam = res.family;
-                            const cre = res.creator;
-
-                            const clav3 = {
-                                dialect: dia,
-                                language: lang,
-                                family: fam,
-                                creator: cre,
-                            };
-                            cotec_one_content.clav3 = clav3;
+                        if (elem.content) {
+                            const clav3_regex = /^(?<dialect>~|[a-z]{2})_(?<language>[a-z]{2})_(?<family>~|[a-z]{3})_(?<creator>[a-z]{3})$/;
+                            const match = clav3_regex.exec(elem.content);
+    
+                            if (match && match.groups) {
+                                const { dialect, language, family, creator } = match.groups;
+    
+                                const clav3 = {
+                                    dialect,
+                                    language,
+                                    family,
+                                    creator,
+                                } as const;
+    
+                                cotec_one_content.clav3 = clav3;
+                            }
                         }
                         break;
                     }
@@ -366,12 +361,13 @@ const parseToJSON = async (): Promise<[CotecMetadata, readonly Readonly<CotecCon
             const match = clav3_regex.exec(row[13]);
 
             if (match && match.groups) {
-                const res = match.groups;
+                const { dialect, language, family, creator } = match.groups;
+
                 const clav3 = {
-                    dialect: res.dialect,
-                    language: res.language,
-                    family: res.family,
-                    creator: res.creator,
+                    dialect,
+                    language,
+                    family,
+                    creator,
                 } as const;
 
                 cotec_one_content.clav3 = clav3;
@@ -389,7 +385,7 @@ const parseToJSON = async (): Promise<[CotecMetadata, readonly Readonly<CotecCon
         contents.push(cotec_one_content);
     }
 
-    console.log('fetching cotec file is successful');
+    console.log('fetching & parsing cotec file is successful');
     return [metadata, contents];
 }
 
@@ -401,8 +397,7 @@ export const [metadata, contents] = await parseToJSON()
         } else {
             throw Error('unidentified error!');
         }
-    })
-;
+    });
 
 type result_t = {
     index: number;
@@ -504,7 +499,7 @@ export const util = {
     },
 
     searchByCreator(name: string) {
-        
+
 
         const results: result_t[] = [];
         contents.forEach((lang, index) => {
