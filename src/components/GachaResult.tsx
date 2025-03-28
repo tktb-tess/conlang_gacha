@@ -11,7 +11,7 @@ const GachaResult: FC = () => {
 
     const [index, setIndex] = useState(cond ? init : 0);
     
-    const result_ref = useRef<HTMLDivElement>(null);
+    const result_ref = useRef<HTMLDivElement | null>(null);
 
     const lang = contents[index];
 
