@@ -64,7 +64,7 @@ const GachaResult: FC = () => {
                 ガチャを回す！
             </button>
 
-            <div ref={result_ref} className="flex flex-col gap-y-3 relative" id="result-root" data-visible="true">
+            <div ref={result_ref} className="flex flex-col gap-y-3" id="result-root" data-visible="true">
                 <h3 id="kekka" className="text-2xl font-medium font-serif text-center">〜結果〜</h3>
 
                 {/* 名前, 作者, 説明, 創作時期, サイト, 辞書, 文法, twitter, 世界, カテゴリ, clav3 */}

@@ -15,10 +15,10 @@
 
     @keyframes slidein {
         from {
-            top: 40px;
+            transform: translateY(40px);
         }
         to {
-            top: 0px;
+            transform: translateY(0px);
         }
     }
     
