@@ -12,6 +12,9 @@ Cotec形式については [こちら](https://migdal.jp/cl_kiita/cotec-conlang-
 
 ## 更新履歴
 
+- v1.2.2
+  - フォント変更
+
 - v1.2.1
   - 背景デザインの修正
   - Vercelに移行

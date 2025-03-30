@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 
 @theme {
-    --font-sans: 'Inter', 'Arial', 'Helvetica Neue', sans-serif;
-    --font-serif: 'Charis SIL', 'Times New Roman', serif;
+    --font-sans: 'Inter', 'Arial', 'Helvetica Neue', 'Noto Sans JP', 'BIZ UDPGothic', 'Hiragino Kaku Gothic ProN', 'Hiragino Mincho', 'Noto Serif Hentaigana', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans KR', 'Noto Naskh Arabic', 'Noto Serif Tibetan', 'Yu Gothic UI', 'Nirmala UI', 'Segoe UI', 'Cambria Math', 'Segoe UI Historic', 'Segoe UI Emoji', 'Unifont Upper', sans-serif, system-ui;
+    --font-serif: 'Charis SIL', 'Times New Roman', 'Cambria Math', 'Noto Serif JP', 'BIZ UDPMincho', 'Hiragino Mincho', 'Hiragino Serif', 'Noto Serif Hentaigana', 'Noto Serif TC', 'Noto Serif SC', 'Noto Serif KR', 'Noto Naskh Arabic', 'Noto Serif Tibetan',  'Nirmala UI', 'Segoe UI', 'Segoe UI Historic', 'Segoe UI Emoji', 'Unifont Upper', serif, system-ui;
     --color-mnlila: oklch(29.21% .1595 296);
     --color-mnlila2: oklch(11.18% .0609 296);
     --color-trlc-white: #ffffff40;
