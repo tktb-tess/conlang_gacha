@@ -1,21 +1,20 @@
-import type { CotecMetadata } from "../modules/fetching";
-import GachaResult from "./GachaResult";
-import { FC } from "react";
+import type { Cotec } from "../modules/cotec";
+import { FC, use } from "react";
 
 type props = {
-    metadata: CotecMetadata;
+    ctcpromise: Promise<Cotec>;
 }
 
-const Gacha: FC<props> = ({ metadata }: props) => {
+const CotecData: FC<props> = ({ ctcpromise }: props) => {
     
+    const cotec = use(ctcpromise);
+
     return (
         <>
-            <p>最終更新: <code>{metadata.date_last_updated.toLocaleString('ja-JP')}</code></p>
-            <h3 className="text-center font-medium font-serif text-2xl">合計 {metadata.datasize[0]} 語</h3>
-            <GachaResult />
-            
+            <p>最終更新: <code>{cotec.metadata.date_last_updated.toLocaleString('ja-JP')}</code></p>
+            <h3 className="text-center font-medium font-serif text-2xl">合計 {cotec.metadata.datasize[0]} 語</h3>
         </>
     );
 }
 
-export default Gacha;
+export default CotecData;

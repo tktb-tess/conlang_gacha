@@ -1,24 +1,14 @@
 @import 'tailwindcss';
 @import './theme.css';
 
-@layer base {
-    a {
-        color: var(--color-cyan-400);
-        transition: color 100ms var(--default-transition-timing-function);
-    }
+a {
+    @apply text-cyan-400 transition-colors hover:text-cyan-700;
+    
+}
 
-    @media (hover: hover) and (pointer: fine) {
-        a:hover {
-            color: var(--color-cyan-700);
-        }
-    }
+code {
 
-    code {
-        padding-inline: calc(var(--spacing) * 1);
-        border-radius: 2px;
-        border: solid 1px #ffffff20;
-        background-color: black;
-    }
+    @apply px-1 rounded-[2px] border border-[#ffffff20] bg-black;
 }
 
 

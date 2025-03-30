@@ -1,14 +1,18 @@
-import { contents } from "../modules/fetching";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState, use } from "react";
 import { getRandomInt } from "../modules/util";
 import './GachaResult.css';
 import ExtLinkIcon from "./box-arrow-up-right";
+import type { Cotec } from "../modules/cotec";
 
-const GachaResult: FC = () => {
+type Props = {
+    ctcpromise: Promise<Cotec>;
+};
+
+const GachaResult: FC<Props> = ({ ctcpromise }) => {
+
+    const contents = use(ctcpromise).contents;
     const init = Number(localStorage.getItem('last_shown_lang_ID'));
-
     const cond = init >= 0 && init < contents.length;
-
     const [index, setIndex] = useState(cond ? init : 0);
     
     const result_ref = useRef<HTMLDivElement | null>(null);
@@ -34,18 +38,19 @@ const GachaResult: FC = () => {
         }
     };
 
-    const handleUnload = useCallback(() => {
-        localStorage.clear();
-        localStorage.setItem('last_shown_lang_ID', index.toString());
-    }, [index]);
-
     useEffect(() => {
+
+        const handleUnload = () => {
+            localStorage.clear();
+            localStorage.setItem('last_shown_lang_ID', index.toString());
+        }
+
         window.addEventListener('beforeunload', handleUnload);
 
         return () => {
             window.removeEventListener('beforeunload', handleUnload);
         };
-    }, [handleUnload]);
+    }, [index]);
 
     return (
         <div className="flex flex-col items-center gap-y-4">
@@ -73,13 +78,13 @@ const GachaResult: FC = () => {
                     <tbody>
                         <tr>
                             <td>名前</td>
-                            <td>{lang.name.normal.concat(lang.name.kanji ?? []).join(', ')}</td>
+                            <td>{lang.name.normal.concat(lang.name.kanji ?? []).join(', ') || `<データなし>`}</td>
                         </tr>
                         <tr>
                             <td>作者</td>
-                            <td>{lang.creator.join(', ')}</td>
+                            <td>{lang.creator.join(', ') || `<データなし>`}</td>
                         </tr>
-                        {lang.desc && (
+                        {lang.desc.length !== 0 && (
                             <tr>
                                 <td>説明</td>
                                 <td>
@@ -97,7 +102,7 @@ const GachaResult: FC = () => {
                                 <td>{lang.period}</td>
                             </tr>
                         )}
-                        {lang.site && (
+                        {lang.site.length !== 0 && (
                             <tr>
                                 <td>サイト</td>
                                 <td>
@@ -121,7 +126,7 @@ const GachaResult: FC = () => {
                                 </td>
                             </tr>
                         )}
-                        {lang.dict && (
+                        {lang.dict.length !== 0 && (
                             <tr>
                                 <td>辞書</td>
                                 <td>
@@ -139,7 +144,7 @@ const GachaResult: FC = () => {
                                 </td>
                             </tr>
                         )}
-                        {lang.grammar && (
+                        {lang.grammar.length !== 0 && (
                             <tr>
                                 <td>文法</td>
                                 <td>
@@ -157,7 +162,7 @@ const GachaResult: FC = () => {
                                 </td>
                             </tr>
                         )}
-                        {lang.twitter && (
+                        {lang.twitter.length !== 0 && (
                             <tr>
                                 <td>𝕏 (旧twitter)</td>
                                 <td>
@@ -175,13 +180,13 @@ const GachaResult: FC = () => {
                                 </td>
                             </tr>
                         )}
-                        {lang.world && (
+                        {lang.world.length !== 0 && (
                             <tr>
                                 <td>世界</td>
                                 <td>{lang.world.join(', ')}</td>
                             </tr>
                         )}
-                        {lang.category && (
+                        {lang.category.length !== 0 && (
                             <tr>
                                 <td>カテゴリ</td>
                                 <td>
@@ -203,7 +208,7 @@ const GachaResult: FC = () => {
                                 </td>
                             </tr>
                         )}
-                        {lang.moyune && (
+                        {lang.moyune.length !== 0 && (
                             <tr>
                                 <td>モユネ分類</td>
                                 <td>{lang.moyune.join('/')}</td>
