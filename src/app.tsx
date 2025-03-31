@@ -13,7 +13,7 @@ type CTCCache = {
 };
 
 const fetchCotec = async (): Promise<Cotec> => {
-    const url = `https://uq-tess-xi-temp.vercel.app/api/cotec`;
+    const url = `https://www.tktb-tess.dev/api/cotec`;
     const resp = await fetch(url);
     if (!resp.ok) throw Error(`failed to fetch cotec json - error status: ${resp.status}`);
     return resp.json();
@@ -24,13 +24,13 @@ const loadCotec = async (): Promise<Cotec> => {
     let cotec: Cotec | undefined;
 
     if (!ctcCache) {
-        console.log('no cache');
+        
         cotec = await fetchCotec();
     } else {
         const { cache, lastUpdate } = JSON.parse(ctcCache) as CTCCache;
         const month = 1000 * 3600 * 24 * 30;
         const cond = Date.now() < lastUpdate + month;
-        console.log(cond ? 'cache' : 'expired');
+        
         cotec = cond ? cache : await fetchCotec();
     }
 
