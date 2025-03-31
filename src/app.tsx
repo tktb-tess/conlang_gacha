@@ -1,5 +1,5 @@
-import { FC, Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { FC, ReactNode, Suspense } from "react";
+import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import CotecData from "./components/Gacha";
 import ExtLinkIcon from "./components/box-arrow-up-right";
 import FootLicense from "./components/foot-license";
@@ -50,7 +50,7 @@ const App: FC = () => {
                         )
                     </p>
                 </section>
-                <ErrorBoundary fallback={<Err />}>
+                <ErrorBoundary FallbackComponent={Err}>
                     <Suspense fallback={<Loading />}>
                         <CotecData ctcpromise={ctcpromise} />
                         <GachaResult ctcpromise={ctcpromise} />
@@ -59,7 +59,7 @@ const App: FC = () => {
                 
                 
             </main>
-            <ErrorBoundary fallback={<></>}>
+            <ErrorBoundary fallback={''}>
                 <Suspense>
                     <FootLicense ctcpromise={ctcpromise} />
                 </Suspense>
@@ -77,8 +77,17 @@ const Loading: FC = () => {
     );
 };
 
-const Err: FC = () => {
-    return <p className="text-center text-2xl text-[red]">Oops! something went wrong...</p>;
+const Err: FC<FallbackProps> = ({ error }: FallbackProps) => {
+    const err = error as unknown;
+    let text: ReactNode = <>Oops! something went wrong...</>;
+
+    if (err instanceof Error) {
+        text = (
+            <>error<br />{err.message}</>
+        );
+    }
+
+    return <p className="text-center text-2xl text-[red]">{text}</p>;
 };
 
 export default App;

@@ -7,12 +7,13 @@ type props = {
 
 const CotecData: FC<props> = ({ ctcpromise }: props) => {
     
-    const cotec = use(ctcpromise);
+    const metadata = use(ctcpromise).metadata;
+    const last_update = new Date(metadata.date_last_updated);
 
     return (
         <>
-            <p>最終更新: <code>{cotec.metadata.date_last_updated.toLocaleString('ja-JP')}</code></p>
-            <h3 className="text-center font-medium font-serif text-2xl">合計 {cotec.metadata.datasize[0]} 語</h3>
+            <p>最終更新: <code>{last_update.toLocaleString('ja-JP')}</code></p>
+            <h3 className="text-center font-medium font-serif text-2xl">合計 {metadata.datasize[0]} 語</h3>
         </>
     );
 }

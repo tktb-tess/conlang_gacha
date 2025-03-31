@@ -2,8 +2,8 @@ export type CotecMetadata = {
     datasize: [number, number];
     title: string;
     author: string[];
-    date_created: Date;
-    date_last_updated: Date;
+    date_created: string;
+    date_last_updated: string;
     license: { name: string, content: string };
     advanced: number;
     label: string[];
