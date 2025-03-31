@@ -12,7 +12,7 @@ const CotecData: FC<props> = ({ ctcpromise }: props) => {
 
     return (
         <>
-            <p>最終更新: <code>{last_update.toLocaleString('ja-JP')}</code></p>
+            <p>最終更新: <code>{last_update.toLocaleString()}</code></p>
             <h3 className="text-center font-medium font-serif text-2xl">合計 {metadata.datasize[0]} 語</h3>
         </>
     );

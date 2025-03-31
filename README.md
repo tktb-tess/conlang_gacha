@@ -1,6 +1,6 @@
 # 人工言語ガチャ
 
-`v1.2.1`
+`v1.2.2`
 
 ## 説明
 
@@ -14,6 +14,7 @@ Cotec形式については [こちら](https://migdal.jp/cl_kiita/cotec-conlang-
 
 - v1.2.2
   - フォント変更
+  - JSONをlocalStorageへキャッシュするように
 
 - v1.2.1
   - 背景デザインの修正

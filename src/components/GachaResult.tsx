@@ -11,7 +11,7 @@ type Props = {
 const GachaResult: FC<Props> = ({ ctcpromise }) => {
 
     const contents = use(ctcpromise).contents;
-    const init = Number(localStorage.getItem('last_shown_lang_ID'));
+    const init = Number(localStorage.getItem('last-shown-lang-ID'));
     const cond = init >= 0 && init < contents.length;
     const [index, setIndex] = useState(cond ? init : 0);
     
@@ -41,8 +41,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
     useEffect(() => {
 
         const handleUnload = () => {
-            localStorage.clear();
-            localStorage.setItem('last_shown_lang_ID', index.toString());
+            localStorage.setItem('last-shown-lang-ID', index.toString());
         }
 
         window.addEventListener('beforeunload', handleUnload);

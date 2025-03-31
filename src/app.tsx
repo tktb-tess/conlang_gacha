@@ -1,4 +1,4 @@
-import { FC, ReactNode, Suspense } from "react";
+import { FC, ReactNode, Suspense, useEffect } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import CotecData from "./components/Gacha";
 import ExtLinkIcon from "./components/box-arrow-up-right";
@@ -7,18 +7,64 @@ import type { Cotec } from "./modules/cotec";
 import GachaResult from "./components/GachaResult";
 import { LuLoaderCircle } from "react-icons/lu";
 
+type CTCCache = {
+    cache: Cotec,
+    lastUpdate: number,
+};
+
 const fetchCotec = async (): Promise<Cotec> => {
     const url = `https://uq-tess-xi-temp.vercel.app/api/cotec`;
-
     const resp = await fetch(url);
-
-    if (!resp.ok) throw Error(`failed to fetch cotec json\nerror status: ${resp.status}`);
-
+    if (!resp.ok) throw Error(`failed to fetch cotec json - error status: ${resp.status}`);
     return resp.json();
 };
 
+const loadCotec = async (): Promise<Cotec> => {
+    const ctcCache = localStorage.getItem('ctc-cache');
+    let cotec: Cotec | undefined;
+
+    if (!ctcCache) {
+        console.log('no cache');
+        cotec = await fetchCotec();
+    } else {
+        const { cache, lastUpdate } = JSON.parse(ctcCache) as CTCCache;
+        const month = 1000 * 3600 * 24 * 30;
+        const cond = Date.now() < lastUpdate + month;
+        console.log(cond ? 'cache' : 'expired');
+        cotec = cond ? cache : await fetchCotec();
+    }
+
+    return cotec;
+};
+
 const App: FC = () => {
-    const ctcpromise = fetchCotec();
+
+    const ctcpromise = loadCotec();
+
+    useEffect(() => {
+        
+        const handleUnload = async () => {
+            const ctc = await ctcpromise;
+
+            const lastUpdate = new Date(ctc.metadata.date_last_updated).getTime();
+            const ctcCache = {
+                cache: ctc,
+                lastUpdate,
+            } as const satisfies CTCCache;
+    
+            localStorage.setItem('ctc-cache', JSON.stringify(ctcCache));
+            
+        };
+
+        window.addEventListener('beforeunload', handleUnload, false);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleUnload, false);
+        }
+
+    }, [ctcpromise]);
+
+    
 
     return (
         <>
@@ -59,7 +105,7 @@ const App: FC = () => {
                 
                 
             </main>
-            <ErrorBoundary fallback={''}>
+            <ErrorBoundary fallback={null}>
                 <Suspense>
                     <FootLicense ctcpromise={ctcpromise} />
                 </Suspense>
@@ -83,7 +129,7 @@ const Err: FC<FallbackProps> = ({ error }: FallbackProps) => {
 
     if (err instanceof Error) {
         text = (
-            <>error<br />{err.message}</>
+            <>Error<br />{err.message}</>
         );
     }
 
