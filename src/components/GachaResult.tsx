@@ -41,6 +41,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
     useEffect(() => {
 
         const handleUnload = () => {
+            localStorage.removeItem('last_shown_lang_ID');
             localStorage.setItem('last-shown-lang-ID', index.toString());
         }
 

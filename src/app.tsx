@@ -8,132 +8,170 @@ import GachaResult from "./components/GachaResult";
 import { LuLoaderCircle } from "react-icons/lu";
 
 type CTCCache = {
-    cache: Cotec,
-    lastUpdate: number,
+  cache: Cotec;
+  expires: number;
 };
 
 const fetchCotec = async (): Promise<Cotec> => {
-    const url = `https://www.tktb-tess.dev/api/cotec`;
-    const resp = await fetch(url);
-    if (!resp.ok) throw Error(`failed to fetch cotec json - error status: ${resp.status}`);
-    return resp.json();
+  const url = `https://www.tktb-tess.dev/api/cotec`;
+  const resp = await fetch(url);
+  if (!resp.ok)
+    throw Error(`failed to fetch cotec json - error status: ${resp.status}`);
+  return resp.json();
 };
 
 const loadCotec = async (): Promise<Cotec> => {
-    const ctcCache = localStorage.getItem('ctc-cache');
-    let cotec: Cotec | undefined;
+  const ctcCache = localStorage.getItem("ctc-cache");
+  let cotec: Cotec | undefined;
 
-    if (!ctcCache) {
-        
-        cotec = await fetchCotec();
-    } else {
-        const { cache, lastUpdate } = JSON.parse(ctcCache) as CTCCache;
-        const month = 1000 * 3600 * 24 * 30;
-        const cond = Date.now() < lastUpdate + month;
-        
-        cotec = cond ? cache : await fetchCotec();
-    }
+  if (!ctcCache) {
+    console.log('cache: no data');
+    cotec = await fetchCotec();
+  } else {
+    const { cache, expires } = JSON.parse(ctcCache) as CTCCache;
+    const month = 1000 * 3600 * 24 * 30;
+    const cond = Date.now() < expires + month;
 
-    return cotec;
+    console.log(`cache: ${cond ? 'valid' : 'expired'}`);
+    cotec = cond ? cache : await fetchCotec();
+  }
+
+  return cotec;
 };
 
 const App: FC = () => {
+  const ctcpromise = loadCotec();
 
-    const ctcpromise = loadCotec();
+  useEffect(() => {
+    const handleUnload = async () => {
+      const ctc = await ctcpromise;
 
-    useEffect(() => {
-        
-        const handleUnload = async () => {
-            const ctc = await ctcpromise;
+      const lastUpdate = new Date(ctc.metadata.date_last_updated);
 
-            const lastUpdate = new Date(ctc.metadata.date_last_updated).getTime();
-            const ctcCache = {
-                cache: ctc,
-                lastUpdate,
-            } as const satisfies CTCCache;
-    
-            localStorage.setItem('ctc-cache', JSON.stringify(ctcCache));
-            
-        };
+      const month = lastUpdate.getMonth();
+      const day = 1000 * 3600 * 24;
+      const duration = (() => {
+        /*
+         * 1 -> 28日 or 29日
+         * 3, 5, 8, 10 -> 30日
+         * 0, 2, 4, 6, 7, 9, 11 -> 31日
+         */
 
-        window.addEventListener('beforeunload', handleUnload, false);
+        if (month === 1) {
+          const year = lastUpdate.getFullYear();
 
-        return () => {
-            window.removeEventListener('beforeunload', handleUnload, false);
+          if (year % 400 === 0) return day * 29;
+          else if (year % 100 === 0) return day * 28;
+          else if (year % 4 === 0) return day * 29;
+          else return day * 28;
+          
+        } else if (month === 3 || month === 5 || month === 8 || month === 10) {
+          return day * 30;
+        } else {
+          return day * 31;
         }
+      })();
 
-    }, [ctcpromise]);
+      const ctcCache = {
+        cache: ctc,
+        expires: lastUpdate.getTime() + duration,
+      } as const satisfies CTCCache;
 
-    
+      localStorage.removeItem("ctc_cache");
+      localStorage.setItem("ctc-cache", JSON.stringify(ctcCache));
+    };
 
-    return (
-        <>
-            <header className="mx-(--n-gutter) flow-root">
-                <h1 className="font-serif text-3xl lg:text-4xl xl:text-5xl font-bold text-center my-15">{import.meta.env.VITE_APP_NAME}</h1>
-            </header>
-            <main className="flex flex-col justify-start min-h-[90vh] gap-y-3">
+    window.addEventListener("beforeunload", handleUnload, false);
 
-                <section>
-                    <h2 className="text-2xl font-semibold text-center font-serif mb-5">〜説明〜</h2>
-                    <p>
-                        <a href="https://github.com/kaeru2193/Conlang-List-Works/" target="_blank" rel="noreferrer">
-                            かえるさん (kaeru2193) のリポジトリ <ExtLinkIcon />
-                        </a>
-                        にて管理されている <code>conlinguistics-wiki-list.ctc</code> からデータを取得し、ランダムで1つ言語を選んで情報を表示します。
-                    </p>
-                    <p>
-                        <code>conlinguistics-wiki-list.ctc</code> とは、人工言語学Wikiの
-                        <a href="https://wiki.conlinguistics.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E%E5%9C%8F%E3%81%AE%E4%BA%BA%E5%B7%A5%E8%A8%80%E8%AA%9E%E4%B8%80%E8%A6%A7"
-                            target="_blank" rel="noreferrer">
-                            日本語圏の人工言語一覧 <ExtLinkIcon />
-                        </a>
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload, false);
+    };
+  }, [ctcpromise]);
 
-                        からリストを取得し、それをCotec形式に変換したものです。<br />(
-                        <a href="https://migdal.jp/cl_kiita/cotec-conlang-table-expression-powered-by-csv-clakis-rfc-2h86"
-                            target="_blank" rel="noreferrer">
-                            Cotec形式の詳細 <ExtLinkIcon />
-                        </a>
-                        )
-                    </p>
-                </section>
-                <ErrorBoundary FallbackComponent={Err}>
-                    <Suspense fallback={<Loading />}>
-                        <CotecData ctcpromise={ctcpromise} />
-                        <GachaResult ctcpromise={ctcpromise} />
-                    </Suspense>
-                </ErrorBoundary>
-                
-                
-            </main>
-            <ErrorBoundary fallback={null}>
-                <Suspense>
-                    <FootLicense ctcpromise={ctcpromise} />
-                </Suspense>
-            </ErrorBoundary>
-        </>
-    );
+  return (
+    <>
+      <header className="mx-(--n-gutter) flow-root">
+        <h1 className="font-serif text-3xl lg:text-4xl xl:text-5xl font-bold text-center my-15">
+          {import.meta.env.VITE_APP_NAME}
+        </h1>
+      </header>
+      <main className="flex flex-col justify-start min-h-[90vh] gap-y-3">
+        <section>
+          <h2 className="text-2xl font-semibold text-center font-serif mb-5">
+            〜説明〜
+          </h2>
+          <p>
+            <a
+              href="https://github.com/kaeru2193/Conlang-List-Works/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              かえるさん (kaeru2193) のリポジトリ <ExtLinkIcon />
+            </a>
+            にて管理されている <code>conlinguistics-wiki-list.ctc</code>{" "}
+            からデータを取得し、ランダムで1つ言語を選んで情報を表示します。
+          </p>
+          <p>
+            <code>conlinguistics-wiki-list.ctc</code> とは、人工言語学Wikiの
+            <a
+              href="https://wiki.conlinguistics.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E%E5%9C%8F%E3%81%AE%E4%BA%BA%E5%B7%A5%E8%A8%80%E8%AA%9E%E4%B8%80%E8%A6%A7"
+              target="_blank"
+              rel="noreferrer"
+            >
+              日本語圏の人工言語一覧 <ExtLinkIcon />
+            </a>
+            からリストを取得し、それをCotec形式に変換したものです。
+            <br />(
+            <a
+              href="https://migdal.jp/cl_kiita/cotec-conlang-table-expression-powered-by-csv-clakis-rfc-2h86"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Cotec形式の詳細 <ExtLinkIcon />
+            </a>
+            )
+          </p>
+        </section>
+        <ErrorBoundary FallbackComponent={Err}>
+          <Suspense fallback={<Loading />}>
+            <CotecData ctcpromise={ctcpromise} />
+            <GachaResult ctcpromise={ctcpromise} />
+          </Suspense>
+        </ErrorBoundary>
+      </main>
+      <ErrorBoundary fallback={null}>
+        <Suspense>
+          <FootLicense ctcpromise={ctcpromise} />
+        </Suspense>
+      </ErrorBoundary>
+    </>
+  );
 };
 
 const Loading: FC = () => {
-    return (
-        <p className="text-center text-2xl">
-            <LuLoaderCircle className="animate-spin inline-block me-3" />
-            Wird geladen...
-        </p>
-    );
+  return (
+    <p className="text-center text-2xl">
+      <LuLoaderCircle className="animate-spin inline-block me-3" />
+      Wird geladen...
+    </p>
+  );
 };
 
 const Err: FC<FallbackProps> = ({ error }: FallbackProps) => {
-    const err = error as unknown;
-    let text: ReactNode = <>Oops! something went wrong...</>;
+  const err = error as unknown;
+  let text: ReactNode = <>Oops! something went wrong...</>;
 
-    if (err instanceof Error) {
-        text = (
-            <>Error<br />{err.message}</>
-        );
-    }
+  if (err instanceof Error) {
+    text = (
+      <>
+        Error
+        <br />
+        {err.message}
+      </>
+    );
+  }
 
-    return <p className="text-center text-2xl text-[red]">{text}</p>;
+  return <p className="text-center text-2xl text-[red]">{text}</p>;
 };
 
 export default App;
