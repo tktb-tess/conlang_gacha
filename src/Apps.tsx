@@ -160,7 +160,7 @@ const App: FC = () => {
 const Loading: FC = () => {
   return (
     <p className="text-center text-2xl">
-      <LuLoaderCircle className="animate-spin inline-block me-3" />
+      <LuLoaderCircle className="inline-block me-3 animate-spin" />
       Wird geladen...
     </p>
   );
