@@ -1,4 +1,4 @@
-import { FC, ReactNode, Suspense, useEffect } from "react";
+import { FC, ReactNode, Suspense, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import CotecData from "./components/Gacha";
 import ExtLinkIcon from "./components/box-arrow-up-right";
@@ -14,9 +14,12 @@ type CTCCache = {
 
 const fetchCotec = async (): Promise<Cotec> => {
   const url = `https://www.tktb-tess.dev/api/cotec`;
-  const resp = await fetch(url);
-  if (!resp.ok)
+  const resp = await fetch(url, { method: "GET" });
+
+  if (!resp.ok) {
     throw Error(`failed to fetch cotec json - error status: ${resp.status}`);
+  }
+
   return resp.json();
 };
 
@@ -25,14 +28,14 @@ const loadCotec = async (): Promise<Cotec> => {
   let cotec: Cotec | undefined;
 
   if (!ctcCache) {
-    console.log('cache: no data');
+    console.log("cache: no data");
     cotec = await fetchCotec();
   } else {
     const { cache, expires } = JSON.parse(ctcCache) as CTCCache;
     const month = 1000 * 3600 * 24 * 30;
     const cond = Date.now() < expires + month;
 
-    console.log(`cache: ${cond ? 'valid' : 'expired'}`);
+    console.log(`cache: ${cond ? "valid" : "expired"}`);
     cotec = cond ? cache : await fetchCotec();
   }
 
@@ -40,7 +43,8 @@ const loadCotec = async (): Promise<Cotec> => {
 };
 
 const App: FC = () => {
-  const ctcpromise = loadCotec();
+  const init = useMemo(() => loadCotec(), []);
+  const [ctcpromise, setCtcpromise] = useState(init);
 
   useEffect(() => {
     const handleUnload = async () => {
@@ -64,7 +68,6 @@ const App: FC = () => {
           else if (year % 100 === 0) return day * 28;
           else if (year % 4 === 0) return day * 29;
           else return day * 28;
-          
         } else if (month === 3 || month === 5 || month === 8 || month === 10) {
           return day * 30;
         } else {
@@ -131,6 +134,12 @@ const App: FC = () => {
             </a>
             )
           </p>
+          <button
+            className="border border-white py-1 px-3 rounded-md block mx-auto my-4 w-max hover:text-neutral-400 hover:border-neutral-400 transition-colors"
+            onClick={() => setCtcpromise(() => fetchCotec())}
+          >
+            ctc強制再読み込み
+          </button>
         </section>
         <ErrorBoundary FallbackComponent={Err}>
           <Suspense fallback={<Loading />}>
