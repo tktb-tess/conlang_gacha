@@ -1,57 +1,19 @@
-import { FC, ReactNode, Suspense, useEffect, useMemo, useState } from "react";
+import { FC, ReactNode, Suspense, useEffect, useState } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import CotecData from "./components/Gacha";
 import ExtLinkIcon from "./components/box-arrow-up-right";
 import FootLicense from "./components/foot-license";
-import type { Cotec } from "./modules/cotec";
+import type { CTCCache } from "./modules/cotec";
 import GachaResult from "./components/GachaResult";
 import { LuLoaderCircle } from "react-icons/lu";
-
-type CTCCache = {
-  cache: Cotec;
-  expires: number;
-};
-
-const fetchCotec = async (): Promise<Cotec> => {
-  const url = `https://www.tktb-tess.dev/api/cotec`;
-  const resp = await fetch(url, { method: "GET" });
-
-  if (!resp.ok) {
-    throw Error(`failed to fetch cotec json - error status: ${resp.status}`);
-  }
-
-  return resp.json();
-};
-
-const loadCotec = async (): Promise<Cotec> => {
-  const ctcCache = localStorage.getItem("ctc-cache");
-  let cotec: Cotec | undefined;
-
-  if (!ctcCache) {
-    console.log("cache: no data");
-    cotec = await fetchCotec();
-  } else {
-    const { cache, expires } = JSON.parse(ctcCache) as CTCCache;
-    const month = 1000 * 3600 * 24 * 30;
-    const cond = Date.now() < expires + month;
-
-    console.log(`cache: ${cond ? "valid" : "expired"}`);
-    cotec = cond ? cache : await fetchCotec();
-  }
-
-  return cotec;
-};
+import { loadCotec, fetchCotec, key } from "./modules/fetch_ctc";
 
 const App: FC = () => {
-  const init = useMemo(() => loadCotec(), []);
-  const [ctcpromise, setCtcpromise] = useState(init);
+  const [ctcpromise, setCtcpromise] = useState(loadCotec);
 
   useEffect(() => {
-    const handleUnload = async () => {
-      const ctc = await ctcpromise;
-
+    ctcpromise.then((ctc) => {
       const lastUpdate = new Date(ctc.metadata.date_last_updated);
-
       const month = lastUpdate.getMonth();
       const day = 1000 * 3600 * 24;
       const duration = (() => {
@@ -60,7 +22,6 @@ const App: FC = () => {
          * 3, 5, 8, 10 -> 30日
          * 0, 2, 4, 6, 7, 9, 11 -> 31日
          */
-
         if (month === 1) {
           const year = lastUpdate.getFullYear();
 
@@ -68,6 +29,7 @@ const App: FC = () => {
           else if (year % 100 === 0) return day * 28;
           else if (year % 4 === 0) return day * 29;
           else return day * 28;
+
         } else if (month === 3 || month === 5 || month === 8 || month === 10) {
           return day * 30;
         } else {
@@ -80,15 +42,8 @@ const App: FC = () => {
         expires: lastUpdate.getTime() + duration,
       } as const satisfies CTCCache;
 
-      localStorage.removeItem("ctc_cache");
-      localStorage.setItem("ctc-cache", JSON.stringify(ctcCache));
-    };
-
-    window.addEventListener("beforeunload", handleUnload, false);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleUnload, false);
-    };
+      localStorage.setItem(key, JSON.stringify(ctcCache));
+    });
   }, [ctcpromise]);
 
   return (

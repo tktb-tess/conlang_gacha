@@ -8,11 +8,23 @@ type Props = {
   ctcpromise: Promise<Cotec>;
 };
 
+const key = "last-seen-lang-id";
+
 const GachaResult: FC<Props> = ({ ctcpromise }) => {
   const contents = use(ctcpromise).contents;
-  const init = Number(localStorage.getItem("last-shown-lang-ID"));
-  const cond = init >= 0 && init < contents.length;
-  const [index, setIndex] = useState(cond ? init : 0);
+
+  const init = (() => {
+    const ls = localStorage.getItem(key);
+
+    if (!ls) return 0;
+    else {
+      const num = Number(ls);
+      const cond = num >= 0 && num < contents.length;
+      return cond ? num : 0;
+    }
+  })();
+
+  const [index, setIndex] = useState(init);
 
   const result_ref = useRef<HTMLDivElement | null>(null);
 
@@ -22,13 +34,6 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
     const next_id = getRandomInt(0, contents.length);
 
     setIndex(() => next_id);
-
-    const next_lang = contents[next_id];
-    console.log({
-      id: next_id,
-      name: next_lang.name.normal[0],
-      lang: next_lang,
-    });
 
     if (result_ref.current) {
       delete result_ref.current.dataset.visible;
@@ -42,16 +47,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
   };
 
   useEffect(() => {
-    const handleUnload = () => {
-      localStorage.removeItem("last_shown_lang_ID");
-      localStorage.setItem("last-shown-lang-ID", index.toString());
-    };
-
-    window.addEventListener("beforeunload", handleUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleUnload);
-    };
+    localStorage.setItem(key, index.toString());
   }, [index]);
 
   return (

@@ -3,7 +3,6 @@
 
 a {
     @apply text-cyan-400 transition-colors hover:text-cyan-700;
-    
 }
 
 code {
