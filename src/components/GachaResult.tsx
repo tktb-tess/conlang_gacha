@@ -83,7 +83,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
             <tr>
               <td>名前</td>
               <td>
-                {lang.name.normal.concat(lang.name.kanji ?? []).join(", ") ||
+                {lang.name.concat(lang.kanji ?? []).join(", ") ||
                   `<データなし>`}
               </td>
             </tr>

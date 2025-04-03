@@ -12,10 +12,8 @@ export type CotecMetadata = {
 
 export type CotecContent = {
   messier: unknown;
-  name: {
-    normal: string[];
-    kanji: string[];
-  };
+  name: string[];
+  kanji: string[];
   desc: string[];
   creator: string[];
   period: string | null;
