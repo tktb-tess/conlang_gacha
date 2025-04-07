@@ -2,12 +2,11 @@ import type { Cotec } from "../modules/cotec";
 import { FC, use } from "react";
 
 type props = {
-    ctcpromise: Promise<Cotec>;
+    ctcpromise: Cotec | Promise<Cotec>;
 }
 
 const CotecData: FC<props> = ({ ctcpromise }: props) => {
-    
-    const metadata = use(ctcpromise).metadata;
+    const metadata = (ctcpromise instanceof Promise) ? use(ctcpromise).metadata : ctcpromise.metadata;
     const last_update = new Date(metadata.date_last_updated);
 
     return (

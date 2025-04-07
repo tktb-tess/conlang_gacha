@@ -1,17 +1,17 @@
-import { FC, useEffect, useRef, useState, use } from "react";
-import { getRandomInt } from "../modules/util";
-import "./GachaResult.css";
-import ExtLinkIcon from "./box-arrow-up-right";
-import type { Cotec } from "../modules/cotec";
+import { FC, useEffect, useRef, useState, use } from 'react';
+import { getRandomInt } from '../modules/util';
+import './GachaResult.css';
+import ExtLinkIcon from './box-arrow-up-right';
+import type { Cotec } from '../modules/cotec';
 
 type Props = {
-  ctcpromise: Promise<Cotec>;
+  ctcpromise: Cotec | Promise<Cotec>;
 };
 
-const key = "last-seen-lang-id";
+const key = 'last-seen-lang-id';
 
 const GachaResult: FC<Props> = ({ ctcpromise }) => {
-  const contents = use(ctcpromise).contents;
+  const contents = (ctcpromise instanceof Promise) ? use(ctcpromise).contents : ctcpromise.contents;
 
   const init = (() => {
     const ls = localStorage.getItem(key);
@@ -40,7 +40,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
 
       setTimeout(() => {
         if (result_ref.current) {
-          result_ref.current.dataset.visible = "true";
+          result_ref.current.dataset.visible = 'true';
         }
       }, 10);
     }
@@ -51,16 +51,16 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
   }, [index]);
 
   return (
-    <div className="flex flex-col items-center gap-y-4">
+    <div className='flex flex-col items-center gap-y-4'>
       <button
-        role="button"
-        type="button"
-        className="
+        role='button'
+        type='button'
+        className='
                 px-3 py-2 font-bold
                 text-lg text-center text-black
                 transition-colors bg-white hover:bg-neutral-400 bg-gradient-to-b from-transparent to-[#00000030]
                 rounded-md
-            "
+            '
         onClick={handleShow}
       >
         ガチャを回す！
@@ -68,28 +68,28 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
 
       <div
         ref={result_ref}
-        className="flex flex-col gap-y-3"
-        id="result-root"
-        data-visible="true"
+        className='flex flex-col gap-y-3'
+        id='result-root'
+        data-visible='true'
       >
-        <h3 id="kekka" className="text-2xl font-medium font-serif text-center">
+        <h3 id='kekka' className='text-2xl font-medium font-serif text-center'>
           〜結果〜
         </h3>
 
         {/* 名前, 作者, 説明, 創作時期, サイト, 辞書, 文法, twitter, 世界, カテゴリ, clav3 */}
 
-        <table id="result-table">
+        <table id='result-table'>
           <tbody>
             <tr>
               <td>名前</td>
               <td>
-                {lang.name.concat(lang.kanji ?? []).join(", ") ||
+                {lang.name.concat(lang.kanji ?? []).join(', ') ||
                   `<データなし>`}
               </td>
             </tr>
             <tr>
               <td>作者</td>
-              <td>{lang.creator.join(", ") || `<データなし>`}</td>
+              <td>{lang.creator.join(', ') || `<データなし>`}</td>
             </tr>
             {lang.desc.length !== 0 && (
               <tr>
@@ -115,19 +115,19 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
                     {lang.site.map((sit, i) => {
                       if (sit.name) {
                         if (
-                          sit.name.includes("サイト") ||
-                          sit.name.includes("辞書") ||
-                          sit.name.includes("文法")
+                          sit.name.includes('サイト') ||
+                          sit.name.includes('辞書') ||
+                          sit.name.includes('文法')
                         ) {
                           return null;
                         } else {
                           return (
                             <li key={`${index}-${i}`}>
-                              {sit.name}:{" "}
+                              {sit.name}:{' '}
                               <a
                                 href={sit.url}
-                                target="_blank"
-                                rel="noreferrer"
+                                target='_blank'
+                                rel='noreferrer'
                               >
                                 {sit.url} <ExtLinkIcon />
                               </a>
@@ -137,7 +137,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
                       } else {
                         return (
                           <li key={`${index}-${i}`}>
-                            <a href={sit.url} target="_blank" rel="noreferrer">
+                            <a href={sit.url} target='_blank' rel='noreferrer'>
                               {sit.url} <ExtLinkIcon />
                             </a>
                           </li>
@@ -156,7 +156,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
                     {lang.dict.map((dic, i) => {
                       return (
                         <li key={`${index}-${i}`}>
-                          <a href={dic} target="_blank" rel="noreferrer">
+                          <a href={dic} target='_blank' rel='noreferrer'>
                             {dic} <ExtLinkIcon />
                           </a>
                         </li>
@@ -174,7 +174,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
                     {lang.grammar.map((gram, i) => {
                       return (
                         <li key={`${index}-${i}`}>
-                          <a href={gram} target="_blank" rel="noreferrer">
+                          <a href={gram} target='_blank' rel='noreferrer'>
                             {gram} <ExtLinkIcon />
                           </a>
                         </li>
@@ -192,7 +192,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
                     {lang.twitter.map((url, i) => {
                       return (
                         <li key={`${index}-${i}`}>
-                          <a href={url} target="_blank" rel="noreferrer">
+                          <a href={url} target='_blank' rel='noreferrer'>
                             {url} <ExtLinkIcon />
                           </a>
                         </li>
@@ -205,7 +205,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
             {lang.world.length !== 0 && (
               <tr>
                 <td>世界</td>
-                <td>{lang.world.join(", ")}</td>
+                <td>{lang.world.join(', ')}</td>
               </tr>
             )}
             {lang.category.length !== 0 && (
@@ -214,7 +214,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
                 <td>
                   <ul>
                     {lang.category.map((cat, i) => {
-                      if (cat.name === "CLA v3" || cat.name === "モユネ分類") {
+                      if (cat.name === 'CLA v3' || cat.name === 'モユネ分類') {
                         return null;
                       } else if (cat.content) {
                         return (
@@ -233,7 +233,7 @@ const GachaResult: FC<Props> = ({ ctcpromise }) => {
             {lang.moyune.length !== 0 && (
               <tr>
                 <td>モユネ分類</td>
-                <td>{lang.moyune.join("/")}</td>
+                <td>{lang.moyune.join('/')}</td>
               </tr>
             )}
             {lang.clav3 && (

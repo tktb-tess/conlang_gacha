@@ -2,12 +2,11 @@ import { FC, use } from "react";
 import type { Cotec } from "../modules/cotec";
 
 type Props = {
-    ctcpromise: Promise<Cotec>;
+    ctcpromise: Cotec | Promise<Cotec>;
 }
 
 const FootLicense: FC<Props> = ({ ctcpromise }: Props) => {
-
-    const metadata = use(ctcpromise).metadata;
+    const metadata = (ctcpromise instanceof Promise) ? use(ctcpromise).metadata : ctcpromise.metadata;
 
     return (
         <footer className="flex flex-col items-center gap-y-5 justify-center mb-3">
