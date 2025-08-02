@@ -1,6 +1,6 @@
 # 人工言語ガチャ
 
-`v1.2.2`
+**更新停止。[こちら](https://github.com/tktb-tess/tess-apps)に移動しました。**
 
 ## 説明
 

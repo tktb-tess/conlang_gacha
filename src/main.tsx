@@ -1,14 +1,10 @@
-import { StrictMode } from "react";
-import ReactDOM from "react-dom/client";
-import "./style.css";
-import App from "./Apps";
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+import './app.css';
+import App from './Apps';
 
-const root = document.querySelector<HTMLDivElement>("div#root");
-if (!root) throw Error("cannot get `root`");
-
-localStorage.removeItem("last_shown_lang_ID");
-localStorage.removeItem("last-shown-lang-ID");
-localStorage.removeItem("ctc_cache");
+const root = document.querySelector<HTMLDivElement>('div#root');
+if (!root) throw Error('cannot get `root`');
 
 ReactDOM.createRoot(root).render(
   <StrictMode>

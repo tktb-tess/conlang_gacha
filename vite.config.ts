@@ -11,7 +11,4 @@ export default defineConfig({
         tailwindcss(),
         topLevelAwait(),
     ],
-    server: {
-        open: '/.',
-    },
 });
